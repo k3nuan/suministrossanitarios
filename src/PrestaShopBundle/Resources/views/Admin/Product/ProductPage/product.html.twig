@@ -322,6 +322,24 @@
             });
           });
         }
+
+ 
+    $("#toggleTableButton").click(function(event) {
+		console.log("k3n :: toggleTableButton");
+		event.preventDefault();
+
+        var table = $("#product-attachment-file");
+        var button = $(this);
+
+        if (table.is(":visible")) {
+            table.hide();
+            button.text("Mostrar tabla");
+        } else {
+            table.show();
+            button.text("Ocultar tabla");
+        }
+    });
+
 	});
   </script>
 {% endblock %}
