@@ -39,6 +39,20 @@
         display: none !important;
       }
     }
+
+	/* k3n */
+	article.alert-danger.mt-2.js-alert-payment-conditions {
+		margin-bottom: 20px;
+		padding: 5px 10px;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		background-color: rgba(248, 215, 218, 1);
+		border-color: rgba(220, 53, 69, 0.1);
+		color: #a94442;
+	}
+	#paypal-buttons {
+		width: 100% !important;
+	}
   </style>
 
   <div data-container-express-checkout data-paypal-source-page="payment-step">
@@ -58,7 +72,9 @@
 {/block}
 
 {block name='js'}
-  <script>		
+  <script>
+  	  console.log("k3n - shortcut-payment-step");
+		
       document.addEventListener('DOMContentLoaded', function() {
           document.querySelector('#payment-confirmation button').addEventListener('click', function(event) {
               let selectedOption = $('input[name=payment-option]:checked');
@@ -80,7 +96,7 @@
           Shortcut.disableTillConsenting();
           Shortcut.hideElementTillPaymentOptionChecked(
               '[data-module-name="paypal"]',
-              '#payment-confirmation'
+              '#payment-confirmation .btn-primary.center-block'
           );
           Shortcut.showElementIfPaymentOptionChecked(
             '[data-module-name="paypal"]',
@@ -97,7 +113,7 @@
               Shortcut.disableTillConsenting();
               Shortcut.hideElementTillPaymentOptionChecked(
                   '[data-module-name="paypal"]',
-                  '#payment-confirmation'
+                  '#payment-confirmation .btn-primary.center-block'
               );
               Shortcut.showElementIfPaymentOptionChecked(
                 '[data-module-name="paypal"]',
