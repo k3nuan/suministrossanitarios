@@ -48,17 +48,16 @@
                     {{ form_errors(formStockMinimalQuantity) }}
                     {{ form_widget(formStockMinimalQuantity) }}
                   </div>
+
                   <!-- k3n -->
                   <div class="col-md-4">
-                    <label class="form-control-label">&nbsp;</label>
-                    <div class="widget-checkbox-inline">
-                      {{ form_errors(formIsMultiple) }}
-                      {{ form_widget(formIsMultiple) }}
-                      <span class="help-box" data-toggle="popover" data-html="true" data-content="Sí se activa este campo entonces el producto se venderá por multiplos de la cantidad minima ingresada." ></span>
-                    </div>
+                    <input type="hidden" name="sell_in_multiples" value="0">
+                    <input type="checkbox" name="sell_in_multiples" id="sell_in_multiples" value="1" {% if sell_in_multiples %}checked="checked"{% endif %}>
+                    <label class="form-control-label">Vender en Mútiplos</label>
+                    <span class="help-box" data-toggle="popover" data-content="" ></span>
                   </div>
-                  <!-- /k3n -->
-                </div>
+
+        </div>
               </fieldset>
 
               <h2>{{ 'Stock'|trans({}, 'Admin.Catalog.Feature') }}</h2>

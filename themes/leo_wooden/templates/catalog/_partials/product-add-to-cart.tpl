@@ -29,15 +29,103 @@
     {block name='product_quantity'}
       <div class="product-quantity clearfix">
         <div class="qty clearfix">
-          <input
-            type="text"
-            name="qty"
-            id="quantity_wanted"
-            value="{$product.quantity_wanted}"
-            class="input-group"
-            min="{$product.minimal_quantity}"
-            aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
-          >
+
+          <!-- k3n -->
+          {if $product.sell_in_multiples > 0}
+              <style>
+              input[type="number"] {
+                -webkit-appearance: textfield;-moz-appearance: textfield;appearance: textfield;
+              }
+              
+              input[type=number]::-webkit-inner-spin-button,
+              input[type=number]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+              }
+
+              .quantity-container {
+                border: 2px solid #ddd;
+                display: inline-flex;
+              }
+
+              .quantity-container,
+              .quantity-container * {
+                box-sizing: border-box;
+              }
+
+              .quantity-container button {
+                outline:none;
+                -webkit-appearance: none;
+                background-color: transparent;
+                border: none;
+                align-items: center;
+                justify-content: center;
+                width: 2rem;
+                height: 2rem;
+                cursor: pointer;
+                margin: 0;
+                position: relative;
+              }
+
+              .quantity-container button:before,
+              .quantity-container button:after {
+                display: inline-block;
+                position: absolute;
+                content: '';
+                width: 1rem;
+                height: 2px;
+                background-color: #212121;
+                transform: translate(-50%, -50%);
+              }
+              .quantity-container button.plus:after {
+                transform: translate(-50%, -50%) rotate(90deg);
+              }
+
+              .quantity-container input[type=number] {
+                font-family: sans-serif;
+                max-width: 5rem;
+                padding: .5rem;
+                border: solid #ddd;
+                border-width: 0 2px;
+                font-size: 1.5rem;
+                height: 2rem;
+                font-weight: bold;
+                text-align: center;
+              }
+              </style>
+              <div class="quantity-container">
+                <button id="decrementButton"></button>
+                <input class="quantity k3n" name="qty" value="{$product.quantity_wanted}" min="{$product.minimal_quantity}" step="{$product.minimal_quantity}" type="number">
+                <button id="incrementButton" class="plus"></button>
+              </div>
+
+              <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                const decrementButton = document.getElementById('decrementButton');
+                const incrementButton = document.getElementById('incrementButton');
+
+                decrementButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.target.parentNode.querySelector('.quantity.k3n').stepDown();
+                });
+                incrementButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.target.parentNode.querySelector('.quantity.k3n').stepUp();
+                });
+              });
+              </script> 
+          {else}
+                <input
+                  type="text"
+                  name="qty"
+                  id="quantity_wanted"
+                  value="{$product.quantity_wanted}"
+                  class="input-group"
+                  min="{$product.minimal_quantity}"
+                  aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
+                >
+          {/if}
+          <!-- /k3n -->
+
         </div>
 
         {block name='product_details'}
@@ -69,6 +157,12 @@
               }
             {/if}
           </p>
+
+          <!-- k3n -->
+          {if $product.sell_in_multiples > 0 }
+            <p class="text-danger">Este producto se vende en múltiplos</p>
+          {/if}
+
         {/block}
 
         <div class="add">
