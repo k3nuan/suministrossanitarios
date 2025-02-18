@@ -500,8 +500,13 @@ class ProductController extends FrameworkBundleAdminController
                         Response::HTTP_SERVICE_UNAVAILABLE
                     );
                 }
-
+                
+                # k3n
+                #var_dump("formAction :: isSubmitted");
+                #var_dump($formData['step3']['combinations']);
+                
                 if ($form->isValid()) {
+                    #var_dump("isValid");
                     //define POST values for keeping legacy adminController skills
                     $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
                     $_POST['form'] = $formData;
@@ -642,7 +647,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
-      'sell_in_multiples' => $product->sell_in_multiples,
+            'sell_in_multiples' => $product->sell_in_multiples
         ];
     }
 
@@ -1239,5 +1244,23 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
+    }
+
+    /* k3nuan */
+    public function updateSellInMultiplesAction(Request $request, $id_product_attribute)
+    {
+        $combination = new Combination($id_product_attribute);
+        if (!Validate::isLoadedObject($combination)) {
+            return $this->json(['success' => false, 'message' => 'La combinación no existe.']);
+        }
+
+        $sell_in_multiples = (int)Tools::getValue('sell_in_multiples');
+        $combination->sell_in_multiples = $sell_in_multiples;
+
+        if ($combination->update()) {
+            return $this->json(['success' => true]);
+        } else {
+            return $this->json(['success' => false, 'message' => 'Error al actualizar la combinación.']);
+        }
     }
 }

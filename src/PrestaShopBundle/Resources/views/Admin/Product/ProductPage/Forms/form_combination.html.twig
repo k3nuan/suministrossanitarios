@@ -94,6 +94,22 @@
                           {{ form_widget(form.attribute_minimal_quantity) }}
                       </fieldset>
                     </div>
+
+                    <div class="col-md-3">
+                    <fieldset class="form-group widget-checkbox-inline">
+                      <label class="form-control-label">&nbsp;</label>
+                      <div class="widget-checkbox-inline">
+                        {{ form_errors(form.attribute_sell_in_multiples) }}
+                        {{ form_widget(form.attribute_sell_in_multiples) }}
+                        <span class="help-box" data-toggle="popover" data-html="true" data-content="Sí se activa este campo entonces el producto se venderá por multiplos de la cantidad minima ingresada." ></span>
+                        <script>
+                            console.log("{{ form.attribute_sell_in_multiples.vars.value }}")
+                            console.log("k3n_{{ form.vars.value.id_product_attribute }}_checkbox");
+                        </script>
+                      </div>
+                    </fieldset>
+                  </div>
+                    
                     <div class="col-md-4">
                       <fieldset class="form-group">
                           <label class="form-control-label">{{ form.attribute_reference.vars.label }}</label>

@@ -140,6 +140,16 @@ class AdminProductWrapper
             $combinationValues['attribute_low_stock_alert'] = false;
         }
 
+        # k3n
+        #var_dump($combinationValues);
+        if (!isset($combinationValues['attribute_sell_in_multiples'])) {
+            #var_dump("false");
+            $combinationValues['attribute_sell_in_multiples'] = false;
+        } else {
+            $combinationValues['attribute_sell_in_multiples'] = true;
+            #var_dump("true");
+        }
+        
         $product->updateAttribute(
             $id_product_attribute,
             $combinationValues['attribute_wholesale_price'],
@@ -159,7 +169,8 @@ class AdminProductWrapper
             array(),
             $combinationValues['attribute_isbn'],
             $combinationValues['attribute_low_stock_threshold'],
-            $combinationValues['attribute_low_stock_alert']
+            $combinationValues['attribute_low_stock_alert'],
+            $combinationValues['attribute_sell_in_multiples'] # k3n
         );
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
@@ -638,12 +649,12 @@ class AdminProductWrapper
                 if (isset($customization['id_customization_field'])) {
                     $id_customization_field = (int) $customization['id_customization_field'];
                     Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization_field`
-					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int) $customization['type'] . '
-					WHERE `id_customization_field` = ' . $id_customization_field);
+                    SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int) $customization['type'] . '
+                    WHERE `id_customization_field` = ' . $id_customization_field);
                 } else {
                     Db::getInstance()->execute(
                         'INSERT INTO `' . _DB_PREFIX_ . 'customization_field` (`id_product`, `type`, `required`)
-                    	VALUES ('
+                        VALUES ('
                             . (int) $product->id . ', '
                             . (int) $customization['type'] . ', '
                             . ($customization['require'] ? 1 : 0)

@@ -150,6 +150,13 @@ class ProductCombination extends CommonAbstractType
                     new Assert\Type(['type' => 'numeric']),
                 ],
             ])
+            ->add('attribute_sell_in_multiples', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Vender en Múltiplos', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Type(['type' => 'bool']),
+                ],
+            ])          
             ->add('attribute_location', TextType::class, [
                 'label' => $this->translator->trans('Stock location', [], 'Admin.Catalog.Feature'),
             ])

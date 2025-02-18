@@ -783,7 +783,8 @@ class AdminProductsControllerCore extends AdminController
                                 array(),
                                 Tools::getValue('attribute_isbn'),
                                 Tools::getValue('attribute_low_stock_threshold'),
-                                Tools::getValue('attribute_low_stock_alert')
+                                Tools::getValue('attribute_low_stock_alert'),
+                                Tools::getValue('attribute_sell_in_multiples') # k3n
                             );
                             StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, (int) $id_product_attribute);
                             StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, (int) $id_product_attribute);
@@ -1706,6 +1707,9 @@ class AdminProductsControllerCore extends AdminController
 
     public function processAdd()
     {
+        # irk3n
+        # var_dump("processAdd");die;
+
         $this->checkProduct();
 
         if (!empty($this->errors)) {
@@ -1843,6 +1847,8 @@ class AdminProductsControllerCore extends AdminController
 
     public function processUpdate()
     {
+        #var_dump("processUpdate");
+        
         $existing_product = $this->object;
 
         $this->checkProduct();
@@ -1994,6 +2000,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> (' . $this->trans('The object cannot be loaded. ', array(), 'Admin.Notifications.Error') . ')';
             }
 
+            #var_dump("object");die;
             return $object;
         }
     }

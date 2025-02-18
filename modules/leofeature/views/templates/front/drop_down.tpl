@@ -41,7 +41,7 @@
 										{/if}
 								</div>
 								
-								{if $enable_update_quantity}
+								{if $enable_update_quantity && false} {* #k3n *}
 									<div class="product-quantity">												
 										{if $enable_button_quantity}
 											<a href="javascript:void(0)" class="leo-bt-product-quantity leo-bt-product-quantity-down"><i class="material-icons">&#xE15B;</i></a>

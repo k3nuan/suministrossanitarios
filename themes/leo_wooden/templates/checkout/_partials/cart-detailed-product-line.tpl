@@ -122,14 +122,23 @@
             {else}
               <input
                 class="js-cart-line-product-quantity"
-                data-down-url="{$product.down_quantity_url}"
-                data-up-url="{$product.up_quantity_url}"
-                data-update-url="{$product.update_quantity_url}"
-                data-product-id="{$product.id_product}"
-                type="text"
+                type="number"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
                 min="{$product.minimal_quantity}"
+        
+        {assign var="mulitplo" value=3}
+        {if $product.sell_in_multiples > 0}
+            step="{$product.minimal_quantity}"
+            data-down-url="{$product.down_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
+            data-up-url="{$product.up_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
+            data-update-url="{$product.update_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
+        {else}
+          data-down-url="{$product.down_quantity_url}"
+          data-up-url="{$product.up_quantity_url}"
+          data-update-url="{$product.update_quantity_url}"
+          data-product-id="{$product.id_product}"
+        {/if}
               />
             {/if}
           </div>
@@ -148,7 +157,6 @@
       </div>
       <div class="col-md-2 col-xs-2 text-xs-right">
         <div class="cart-line-product-actions">
-	        
           <a
               class                       = "remove-from-cart"
               rel                         = "nofollow"
@@ -156,7 +164,7 @@
               data-link-action            = "delete-from-cart"
               data-id-product             = "{$product.id_product|escape:'javascript'}"
               data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
-              data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
+              data-id-customization       = "{$product.id_customization|escape:'javascript'}"
           >
             {if !isset($product.is_gift) || !$product.is_gift}
             <i class="material-icons float-xs-left">delete</i>

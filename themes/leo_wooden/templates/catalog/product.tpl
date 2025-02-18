@@ -73,13 +73,14 @@
 
     <div class="col-md-6">
       {block name='page_header_container'}
-	      {block name='page_header'}
-	      <h1 class="h1 product-detail-name soyes" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
-	      {/block}
+      {block name='page_header'}
+      <h1 class="h1 product-detail-name" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
       {/block}
+      {/block}
+
       {hook h='displayProductButtons' product=$product}
       {hook h='displayLeoProductReviewExtra' product=$product}
-	   
+     
       {block name='product_prices'}
       {include file='catalog/_partials/product-prices.tpl'}
       {/block}
@@ -221,8 +222,7 @@
 
       });
     }
-    ); 
-    
+    );
   </script>
 
   {block name='product_footer'}
@@ -240,6 +240,7 @@
     {/block}
   </footer>
   {/block}
+
 </section>
 {/if}
 {/block}

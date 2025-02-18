@@ -289,6 +289,8 @@ class ProductCore extends ObjectModel
      * @var string
      */
     public $delivery_out_stock;
+    
+    public $sell_in_multiples; // k3n | Nuevo atributo
 
     public static $_taxCalculationMethod = null;
     protected static $_prices = array();
@@ -359,6 +361,14 @@ class ProductCore extends ObjectModel
             'online_only' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'ecotax' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
             'minimal_quantity' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+
+            /* k3n */
+            'sell_in_multiples' => array(
+                'type' => self::TYPE_BOOL,
+                'validate' => 'isBool',
+                'required' => false,
+            ),
+            
             'low_stock_threshold' => array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
             'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
             'price' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true),
@@ -1728,7 +1738,8 @@ class ProductCore extends ObjectModel
         $available_date,
         $isbn = '',
         $low_stock_threshold = null,
-        $low_stock_alert = false
+        $low_stock_alert = false,
+        $sell_in_multiples = false
     ) {
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
@@ -1751,7 +1762,8 @@ class ProductCore extends ObjectModel
             array(),
             $isbn,
             $low_stock_threshold,
-            $low_stock_alert
+            $low_stock_alert,
+            $sell_in_multiples
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
 
@@ -1833,8 +1845,9 @@ class ProductCore extends ObjectModel
         array $id_shop_list = array(),
         $isbn = '',
         $low_stock_threshold = null,
-        $low_stock_alert = false
-    ) {
+        $low_stock_alert = false,
+        $sell_in_multiples = false
+    ) {     
         $combination = new Combination($id_product_attribute);
 
         if (!$update_all_fields) {
@@ -1865,8 +1878,10 @@ class ProductCore extends ObjectModel
         $combination->upc = pSQL($upc);
         $combination->default_on = (int) $default;
         $combination->minimal_quantity = (int) $minimal_quantity;
+        $combination->sell_in_multiples = !empty($sell_in_multiples); # k3n
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
+
         $combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
 
         if (count($id_shop_list)) {
@@ -1893,6 +1908,11 @@ class ProductCore extends ObjectModel
                 'upc' => pSQL($upc),
             ), 'id_product = ' . $this->id . ' AND id_product_attribute = ' . (int) $id_product_attribute);
         }
+
+        # k3n
+        Db::getInstance()->update('product_attribute_shop', array(
+                'minimal_quantity' => pSQL($minimal_quantity)
+            ), 'id_product = ' . $this->id . ' AND id_product_attribute = ' . (int) $id_product_attribute);
 
         Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int) $id_product_attribute));
         Tools::clearColorListCache($this->id);
@@ -4887,17 +4907,9 @@ class ProductCore extends ObjectModel
         }
 
         $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
-        
-        // SOYMOD #80953 - Formatear la fecha al formato español
-        if($row['available_date'] != "0000-00-00"){
-	        $date = DateTime::createFromFormat('Y-m-d', $row['available_date']);
-			if ($date) {
-			    $row['available_date'] = $date->format('d/m/Y');
-			}
-        }
 
         self::$productPropertiesCache[$cache_key] = $row;
-        
+
         return self::$productPropertiesCache[$cache_key];
     }
 

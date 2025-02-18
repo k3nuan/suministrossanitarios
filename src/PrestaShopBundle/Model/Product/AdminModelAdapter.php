@@ -567,6 +567,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'id_product_attributes' => $this->getProductAttributes($product),
             'out_of_stock' => $product->out_of_stock,
             'minimal_quantity' => $product->minimal_quantity,
+            #'sell_in_multiples' => (bool) $product->sell_in_multiples, # k3n
             'location' => $product->location,
             'low_stock_threshold' => $product->low_stock_threshold,
             'low_stock_alert' => (bool) $product->low_stock_alert,
