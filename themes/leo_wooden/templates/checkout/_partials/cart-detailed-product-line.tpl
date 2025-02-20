@@ -120,25 +120,25 @@
             {if isset($product.is_gift) && $product.is_gift}
               <span class="gift-quantity">{$product.quantity}</span>
             {else}
+                <pre>{$product.sell_in_multiples|@var_dump}</pre>
               <input
-                class="js-cart-line-product-quantity"
+                class="js-cart-line-product-quantity k3n-sellinmultiples"
                 type="number"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
                 min="{$product.minimal_quantity}"
-        
-        {assign var="mulitplo" value=3}
-        {if $product.sell_in_multiples > 0}
-            step="{$product.minimal_quantity}"
-            data-down-url="{$product.down_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
-            data-up-url="{$product.up_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
-            data-update-url="{$product.update_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
-        {else}
-          data-down-url="{$product.down_quantity_url}"
-          data-up-url="{$product.up_quantity_url}"
-          data-update-url="{$product.update_quantity_url}"
-          data-product-id="{$product.id_product}"
-        {/if}
+                {if $product.sell_in_multiples > 0}
+                    step="{$product.minimal_quantity}"
+                    data-down-url="{$product.down_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
+                    data-up-url="{$product.up_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
+                    data-update-url="{$product.update_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
+                {else}
+                  step="1"
+                  data-down-url="{$product.down_quantity_url}"
+                  data-up-url="{$product.up_quantity_url}"
+                  data-update-url="{$product.update_quantity_url}"
+                  data-product-id="{$product.id_product}"
+                {/if}
               />
             {/if}
           </div>

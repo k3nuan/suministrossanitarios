@@ -4962,7 +4962,7 @@
                             l.attr("min",s), 
                             l.attr("step", l.attr("step") || 1),
                             i.default.emit("updatedProduct",e);
-                            console.log( 'k3n_sellinmultiples: ' + (0,r.default)('.k3n_sellinmultiples').length );
+                            console.log( 'k3n-sellinmultiples: ' + (0,r.default)('.k3n-sellinmultiples').length );
                         },
                         complete: function(e, t) {
                             s = null,

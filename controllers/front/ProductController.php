@@ -446,7 +446,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $isPreview ? array('preview' => '1') : array()
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
-            'product_sell_multiples' => $sellInMultiples, # k3n
+            'product_sell_in_multiples' => $sellInMultiples, # k3n
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
             'product_title' => $product['title'],

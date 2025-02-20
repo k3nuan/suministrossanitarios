@@ -2979,9 +2979,9 @@
                 t(),
                 e(),
                 s.default.on("updatedProduct", function (i) {
-                    console.log("k3n :: updatedProduct | 0220 16");
+                    console.log("k3n :: updatedProduct | 0220 16:35");
                     if ((n(), t(), i && i.product_minimal_quantity)) {
-                        var r = parseInt(i.product_minimal_quantity,10), k = parseInt(i.sell_in_product, 10) === 1 ? r : 1;
+                        var r = parseInt(i.product_minimal_quantity,10), k = parseInt(i.product_sell_in_multiples, 10) === 1 ? r : 1;
                         console.log("k: " + k);
                         (0, o.default)("#quantity_wanted").trigger("touchspin.updatesettings", { min: r, step: k });
                     }
