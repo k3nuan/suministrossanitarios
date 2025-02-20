@@ -81,7 +81,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function init()
     {
         parent::init();
-		
+        
         $id_product = (int) Tools::getValue('id_product');
 
         $this->setTemplate('catalog/product', array(
@@ -155,15 +155,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         case ProductInterface::REDIRECT_TYPE_NOT_FOUND:
                         default:
                         
-                        	// SOYMOD #79856
-                        	$category_default = new Category($this->product->id_category_default);
-                        	if (Validate::isLoadedObject($category_default)) {
-	                        	header('HTTP/1.1 301 Moved Permanently');
-	                        	header('Location: ' . $this->context->link->getCategoryLink($this->product->id_category_default));
-	                            exit;
-	                            break;
-                        	}
-                        	// End MOD
+                            // SOYMOD #79856
+                            $category_default = new Category($this->product->id_category_default);
+                            if (Validate::isLoadedObject($category_default)) {
+                                header('HTTP/1.1 301 Moved Permanently');
+                                header('Location: ' . $this->context->link->getCategoryLink($this->product->id_category_default));
+                                exit;
+                                break;
+                            }
+                            // End MOD
                         
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
@@ -231,7 +231,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ) {
                 $this->product->quantity = 0;
             }
-			
+            
             $this->product->description = $this->transformDescriptionWithImg($this->product->description);
 
             $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
@@ -386,7 +386,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Assign attribute groups to the template
             $this->assignAttributesGroups($product_for_template);
         }
-		
+        
         parent::initContent();
     }
 
@@ -412,6 +412,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getProductMinimalQuantity($product);
+        $sellInMultiples = $this->getProductSellInMultiples($product); # k3n
         $isPreview = ('1' === Tools::getValue('preview'));
 
         ob_end_clean();
@@ -445,6 +446,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $isPreview ? array('preview' => '1') : array()
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
+            'product_sell_multiples' => $sellInMultiples, # k3n
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
             'product_title' => $product['title'],
@@ -526,18 +528,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
-		// MOD #46184 - Obtenemos el precio del producto descontado
-		//$soy_precio_producto = ($this->product->price * $this->product->tax_rate /100) + $this->product->price;
-		$soy_precio_producto = $this->product->base_price;
-		
-		foreach($this->quantity_discounts as &$disc){
-			if($disc["reduction_type"] == "percentage"){
-				$disc["precio"] = $soy_precio_producto -($soy_precio_producto * $disc["reduction"]);
-				$disc["precio"] = number_format($disc["precio"], 2, ",", ".") . " €";
-			}
-		}
-		
-		
+        // MOD #46184 - Obtenemos el precio del producto descontado
+        //$soy_precio_producto = ($this->product->price * $this->product->tax_rate /100) + $this->product->price;
+        $soy_precio_producto = $this->product->base_price;
+        
+        foreach($this->quantity_discounts as &$disc){
+            if($disc["reduction_type"] == "percentage"){
+                $disc["precio"] = $soy_precio_producto -($soy_precio_producto * $disc["reduction"]);
+                $disc["precio"] = number_format($disc["precio"], 2, ",", ".") . " €";
+            }
+        }
+        
+        
         $this->context->smarty->assign(array(
             'no_tax' => Tax::excludeTaxeOption() || !$tax,
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
@@ -1085,6 +1087,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['new'] = (int) $this->product->new;
         $product['id_product_attribute'] = $this->getIdProductAttributeByRequestOrGroup();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
+        $product['sell_in_multiples'] = $this->getProductSellInMultiples($product); # k3n       
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
         $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
@@ -1116,7 +1119,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['title'] = $this->getProductPageTitle();
 
         $presenter = $this->getProductPresenter();
-
+        
         return $presenter->present(
             $productSettings,
             $product_full,
@@ -1145,6 +1148,23 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $minimal_quantity;
     }
 
+    # k3n
+    protected function getProductSellInMultiples($product)
+    {       
+        $sell_in_multiples = 0;
+
+        if ($product['id_product_attribute']) {
+            $combination = $this->findProductCombinationById($product['id_product_attribute']);
+            if ($combination['sell_in_multiples']) {
+                $sell_in_multiples = $combination['sell_in_multiples'];
+            }
+        } else {
+            $sell_in_multiples = $this->product->sell_in_multiples;
+        }
+
+        return $sell_in_multiples;
+    }
+    
     /**
      * @param $combinationId
      *

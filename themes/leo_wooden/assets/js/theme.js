@@ -2979,10 +2979,11 @@
                 t(),
                 e(),
                 s.default.on("updatedProduct", function (i) {
-                    console.log("k3n :: updatedProduct");
+                    console.log("k3n :: updatedProduct | 0220 16");
                     if ((n(), t(), i && i.product_minimal_quantity)) {
-                        var r = parseInt(i.product_minimal_quantity, 10);
-                        (0, o.default)("#quantity_wanted").trigger("touchspin.updatesettings", { min: r, step: r });
+                        var r = parseInt(i.product_minimal_quantity,10), k = parseInt(i.sell_in_product, 10) === 1 ? r : 1;
+                        console.log("k: " + k);
+                        (0, o.default)("#quantity_wanted").trigger("touchspin.updatesettings", { min: r, step: k });
                     }
                     e(),
                         (0, o.default)((0, o.default)(".tabs .nav-link.active").attr("href"))

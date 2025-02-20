@@ -4959,11 +4959,10 @@
                             isNaN(s) || "updatedProductQuantity" === t || 
                             l.val(s),
                             l.attr("value",s),
-                            (l.attr("min",s), 
-                            l.attr("step",s)),
+                            l.attr("min",s), 
+                            l.attr("step", l.attr("step") || 1),
                             i.default.emit("updatedProduct",e);
-
-                            //(0,r.default)('#quantity_wanted').trigger('touchspin.destroy');
+                            console.log( 'k3n_sellinmultiples: ' + (0,r.default)('.k3n_sellinmultiples').length );
                         },
                         complete: function(e, t) {
                             s = null,
@@ -4994,7 +4993,6 @@
     r.default)(document).ready(function() {
         (0,
         r.default)("body").on("change touchspin.on.startspin", ".product-variants *[name]", function(e) {
-            console.log("k3n :: change touchspin");
             i.default.emit("updateProduct", {
                 eventType: "updatedProductCombination",
                 event: e,

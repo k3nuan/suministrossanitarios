@@ -34,9 +34,13 @@
             name="qty"
             id="quantity_wanted"
             value="{$product.quantity_wanted}"
-            class="input-group"
+            class="input-group k3n-sellinmultiples"
             min="{$product.minimal_quantity}"
-            {if $product.sell_in_multiples > 0} step="{$product.minimal_quantity}" {/if}
+            {if $product.sell_in_multiples > 0}
+              step="{$product.minimal_quantity}"
+            {else}
+              step="1"
+            {/if}
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
           >
         </div>
@@ -74,7 +78,7 @@
 
         <div class="add">
           {if $product.sell_in_multiples > 0 }
-            <p class="text-danger" id="k3n_sellinmultiples">Este producto se vende en múltiplos</p>
+            <p class="text-danger">Este producto se vende en múltiplos</p>
           {/if}
           <button
             class="btn btn-primary add-to-cart"
