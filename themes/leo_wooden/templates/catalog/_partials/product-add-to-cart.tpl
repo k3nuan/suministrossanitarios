@@ -59,7 +59,7 @@
             {/if}
           </span>
         {/block}
-        
+      
         {block name='product_minimal_quantity'}
           <p class="product-minimal-quantity">
             {if $product.minimal_quantity > 1}
@@ -70,11 +70,11 @@
               }
             {/if}
           </p>
-        {/block}
+    {/block}
 
         <div class="add">
           {if $product.sell_in_multiples > 0 }
-            <p class="text-danger">Este producto se vende en múltiplos</p>
+            <p class="text-danger" id="k3n_sellinmultiples">Este producto se vende en múltiplos</p>
           {/if}
           <button
             class="btn btn-primary add-to-cart"

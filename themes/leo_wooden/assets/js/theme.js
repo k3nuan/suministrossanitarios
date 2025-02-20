@@ -2011,7 +2011,7 @@
                     buttonup_class: "btn btn-touchspin js-touchspin js-decrease-product-quantity",
                     min: parseInt((0, a.default)(e).attr("min"), 10),
                     max: 1e6,
-                    step: parseInt((0, a.default)(e).attr("step"), 10) || parseInt((0, a.default)(e).attr("min"), 10),
+                    step: parseInt((0, a.default)(e).attr("step"), 10) || 1,
                 });
             }),
                 p.switchErrorStat();
@@ -2969,7 +2969,7 @@
                     buttonup_class: "btn btn-touchspin js-touchspin",
                     min: parseInt(t.attr("min"), 10),
                     max: 1e6,
-                    step: parseInt(t.attr("step"), 10) || parseInt(t.attr("min"), 10),
+                    step: parseInt(t.attr("step"), 10) || 1,
                 }),
                     (0, o.default)("body").on("change keyup", "#quantity_wanted", function (t) {
                         (0, o.default)(t.currentTarget).trigger("touchspin.stopspin"), s.default.emit("updateProduct", { eventType: "updatedProductQuantity", event: t });
