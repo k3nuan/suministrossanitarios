@@ -118,6 +118,7 @@ class ProductFilter extends HashMapWhitelistFilter
             'url',
             'weight_unit',
             'seo_availability',
+            'sell_in_multiples',
         );
 
         $this->whitelist($whitelist);

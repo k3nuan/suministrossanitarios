@@ -120,14 +120,13 @@
             {if isset($product.is_gift) && $product.is_gift}
               <span class="gift-quantity">{$product.quantity}</span>
             {else}
-                <pre>{$product.sell_in_multiples|@var_dump}</pre>
               <input
                 class="js-cart-line-product-quantity k3n-sellinmultiples"
                 type="number"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
                 min="{$product.minimal_quantity}"
-                {if $product.sell_in_multiples > 0}
+                {if !empty($product.sell_in_multiples) }
                     step="{$product.minimal_quantity}"
                     data-down-url="{$product.down_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"
                     data-up-url="{$product.up_quantity_url|replace:'update=1':"update=`$product.minimal_quantity`"}&qty={$product.minimal_quantity}"

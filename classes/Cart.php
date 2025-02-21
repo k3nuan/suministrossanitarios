@@ -726,6 +726,7 @@ class CartCore extends ObjectModel
                 IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
                 IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
+                IFNULL(pa.`sell_in_multiples`, p.`sell_in_multiples`) AS sell_in_multiples,
                 IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
             ');
 
@@ -733,7 +734,7 @@ class CartCore extends ObjectModel
             $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.`id_shop` = cp.`id_shop` AND product_attribute_shop.`id_product_attribute` = pa.`id_product_attribute`)');
         } else {
             $sql->select(
-                'p.`reference` AS reference, p.`ean13`, p.`isbn`,
+                'p.`reference` AS reference, p.`ean13`, p.`isbn`, p.`sell_in_multiples`
                 p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
             );
         }
@@ -3337,11 +3338,11 @@ class CartCore extends ObjectModel
                 $cache_id .= '_' . (int) $product['id_product'] . '_' . (int) $product['id_product_attribute'];
             }
         }
-		/* // MOD
+        /* // MOD
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
-		*/
+        */
         // Order total in default currency without fees
         $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
 
