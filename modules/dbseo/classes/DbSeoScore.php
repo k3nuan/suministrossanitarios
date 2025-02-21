@@ -87,6 +87,20 @@ class DbSeoScore extends ObjectModel
         return $rating;
     }
 
+    # k3n
+    public static function getTotalByIdItem($id_item, $id_shop)
+    {
+        $sql = "SELECT SUM(od.product_quantity) as total
+            FROM "._DB_PREFIX_."order_detail od
+            WHERE od.product_id = '$id_item' AND od.id_shop = '$id_shop'";
+        $total = Db::getInstance()->getValue($sql);
+        
+        #echo "<pre>";var_dump($sql);echo "</pre>";
+        #echo "<pre>";var_dump($total);echo "</pre>";
+
+        return $total;
+    }
+
     public static function getWihtoutRating($type)
     {
         if($type == 1) {

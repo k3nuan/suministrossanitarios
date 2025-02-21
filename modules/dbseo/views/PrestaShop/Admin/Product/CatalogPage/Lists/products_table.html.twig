@@ -64,16 +64,21 @@
           {% endif %}
 
           <th scope="col" class="text-center">
-            {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
+            <!-- ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) -->
+            {{ "Status"|trans({}, 'Admin.Global') }}
           </th>
           {% if has_category_filter == true %}
             <th scope="col">
               {{ ps.sortable_column_header("Position"|trans({}, 'Admin.Global'), 'position', orderBy, sortOrder) }}
             </th>
           {% endif %}
+          <!-- k3n -->
+          <th scope="col" class="text-center" style="width: 3rem; padding-right: 2rem">
+            {{ ps.sortable_column_header("Ventas"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
+          </th>         
           <th scope="col" class="text-center" style="width: 3rem; padding-right: 2rem">
             {{ "SEO"|trans({}, 'Admin.Global') }}
-          </th>
+          </th>       
           <th scope="col" class="text-right" style="width: 3rem; padding-right: 2rem">
               {{ "Actions"|trans({}, 'Admin.Global') }}
           </th>

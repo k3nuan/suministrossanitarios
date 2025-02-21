@@ -89,6 +89,7 @@ class Dbseo extends Module
             $this->registerHook('actionObjectCmsUpdateAfter') &&
             $this->registerHook('actionObjectCmsAddAfter') &&
             $this->registerHook('displayBackOfficeCmsListAfter');
+            #$this->registerHook('actionAdminProductsListingFieldsModifier'); # k3n
     }
 
     public function uninstall()
@@ -475,9 +476,12 @@ class Dbseo extends Module
         $id_product = (int)$params['id_product'];
         $id_lang = $this->context->language->id;
         $id_shop = $this->context->shop->id;
-        $rating = (int)DbSeoScore::getScoreByIdItem($type, $id_product, $id_lang, $id_shop);
-
+        $rating  = (int)DbSeoScore::getScoreByIdItem($type, $id_product, $id_lang, $id_shop);
+        $total   = (int)DbSeoScore::getTotalByIdItem($id_product, $id_shop); # k3n
+        #echo "<pre>";var_dump($total);echo "</pre>";die;
+        
         $this->context->smarty->assign('rating', $rating);
+        $this->context->smarty->assign('total', $total); # k3n
         return $this->display(__FILE__, 'views/templates/admin/list/listproducts.tpl');
     }
 
@@ -778,4 +782,56 @@ class Dbseo extends Module
         $this->context->smarty->assign('id_cms', $id_cms);
         return $this->display(__FILE__, 'views/templates/admin/list/listcms.tpl');
     }
+
+    # k3n
+    public function hookActionAdminProductsListingFieldsModifier($params)
+    {
+        // Obtener los parámetros
+        $sqlSelect = &$params['sql_select'];
+        $sqlTable = &$params['sql_table'];
+        $sqlWhere = &$params['sql_where'];
+
+        // Unir la tabla de detalles de pedidos para obtener las ventas
+        $sqlTable .= ' LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON a.id_product = od.id_product';
+
+        // Agrupar por ID de producto para sumar las cantidades vendidas
+        $sqlGroupBy = ' GROUP BY a.id_product';
+
+        // Seleccionar la suma de las cantidades vendidas
+        $sqlSelect .= ', SUM(od.product_quantity) AS total_sales';
+
+        // Agregar un filtro por ventas (ejemplo: mostrar solo productos con más de 10 ventas)
+        // if (Tools::getValue('total_sales')) {
+        //     $sqlWhere .= ' AND SUM(od.product_quantity) > '.(int)Tools::getValue('total_sales');
+        // }
+
+        // Modificar la consulta (ejemplo: ordenar por ventas)
+        // $sqlOrder = ' ORDER BY total_sales DESC';
+
+        // Asignar las modificaciones a los parámetros
+        $params['sql_select'] = $sqlSelect;
+        $params['sql_table'] = $sqlTable;
+        $params['sql_group_by'] = $sqlGroupBy;
+        // $params['sql_order'] = $sqlOrder;
+        // $params['sql_where'] = $sqlWhere;
+        var_dump($params);die;
+    }   
+    /*public function hookActionAdminProductsListingFieldsModifier($params)
+    {
+        // Modificar la consulta SQL para filtrar por ventas
+        $params['sql_select']['total_sales'] = array(
+            'table' => 'od',
+            'field' => 'SUM(od.product_quantity) AS total_sales',
+            # 'filtering' => 'SUM(od.product_quantity) > 0',
+        );
+
+        $params['sql_table']['od'] = array(
+            'table' => 'order_detail',
+            'join' => 'LEFT JOIN',
+            'on' => 'p.id_product = od.product_id',
+        );
+
+        $params['sql_group_by'][] = 'p.id_product';
+        $params['sql_order'] = 'total_sales DESC';
+    }*/
 }

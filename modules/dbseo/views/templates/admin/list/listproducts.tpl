@@ -17,6 +17,10 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
+<!-- k3n -->
+<td class="text-center text-success">
+    <strong>{$total}</strong>
+</td>
 <td>
     <div class="c100 p{$rating} small center {if $rating > 50 && $rating <= 85}orange{elseif $rating > 85}green{/if}">
         <span>{$rating}%</span>
