@@ -361,6 +361,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
         
         # k3n
+        /*
         $resultado = array_filter($sqlOrder, function($elemento) {
             return strpos($elemento, "active") !== false;
         });
@@ -385,6 +386,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             #echo "<pre>";var_dump($sql);echo "</pre></hr></hr>";
             #die;
         }
+        */
         
         $products = Db::getInstance()->executeS($sql, true, false);
         $total = Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);

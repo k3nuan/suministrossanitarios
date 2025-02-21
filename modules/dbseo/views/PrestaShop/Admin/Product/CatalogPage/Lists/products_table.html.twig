@@ -64,8 +64,8 @@
           {% endif %}
 
           <th scope="col" class="text-center">
-            <!-- ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) -->
-            {{ "Status"|trans({}, 'Admin.Global') }}
+            {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
+            <!-- "Status"|trans({}, 'Admin.Global') -->
           </th>
           {% if has_category_filter == true %}
             <th scope="col">
@@ -74,7 +74,7 @@
           {% endif %}
           <!-- k3n -->
           <th scope="col" class="text-center" style="width: 3rem; padding-right: 2rem">
-            {{ ps.sortable_column_header("Ventas"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
+            {{ ps.sortable_column_header("Ventas"|trans({}, 'Admin.Global'), 'sales', orderBy, sortOrder) }}
           </th>         
           <th scope="col" class="text-center" style="width: 3rem; padding-right: 2rem">
             {{ "SEO"|trans({}, 'Admin.Global') }}
