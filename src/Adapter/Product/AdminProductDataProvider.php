@@ -359,6 +359,33 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         ));
 
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
+        
+        # k3n
+        $resultado = array_filter($sqlOrder, function($elemento) {
+            return strpos($elemento, "active") !== false;
+        });
+        if (!empty($resultado)) {
+            # echo "Se encontró 'total_sales' en el array (usando array_filter).\n";
+            unset($sqlSelect['active']);
+            $sqlSelect['active'] = array(
+                'select' => 'SUM(od.product_quantity)'
+            );
+            $sqlTable['od'] = array(
+                'table' => 'order_detail',
+                'join' => 'LEFT JOIN',
+                'on' => 'p.id_product = od.product_id',
+            );
+            $sqlGroupBy[] = 'p.id_product';
+            $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
+
+            #echo "<pre>";var_dump($sqlSelect);echo "</pre></hr></hr>";
+            #echo "<pre>";var_dump($sqlTable);echo "</pre></hr></hr>";
+            #echo "<pre>";var_dump($sqlGroupBy);echo "</pre></hr></hr>";
+            #echo "<pre>";var_dump($sqlOrder);echo "</pre></hr></hr>";
+            #echo "<pre>";var_dump($sql);echo "</pre></hr></hr>";
+            #die;
+        }
+        
         $products = Db::getInstance()->executeS($sql, true, false);
         $total = Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
         $total = $total[0]['FOUND_ROWS()'];
