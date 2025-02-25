@@ -88,8 +88,8 @@ class Dbseo extends Module
             $this->registerHook('displayBackOfficeCmsAfter') &&
             $this->registerHook('actionObjectCmsUpdateAfter') &&
             $this->registerHook('actionObjectCmsAddAfter') &&
-            $this->registerHook('displayBackOfficeCmsListAfter');
-            #$this->registerHook('actionAdminProductsListingFieldsModifier'); # k3n
+            $this->registerHook('displayBackOfficeCmsListAfter') &&
+            $this->registerHook('actionAdminProductsListingFieldsModifier'); # k3n
     }
 
     public function uninstall()
@@ -783,29 +783,33 @@ class Dbseo extends Module
         return $this->display(__FILE__, 'views/templates/admin/list/listcms.tpl');
     }
 
-    # k3n
+    # k3n 
     public function hookActionAdminProductsListingFieldsModifier($params)
     {
+        # -----------------------------------------------------------        
+        # gemini
         // Obtener los parámetros
         $sqlSelect = &$params['sql_select'];
         $sqlTable = &$params['sql_table'];
         $sqlWhere = &$params['sql_where'];
 
-        // Unir la tabla de detalles de pedidos para obtener las ventas
+        // 1. Unir la tabla order_detail
         $sqlTable .= ' LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON a.id_product = od.id_product';
 
-        // Agrupar por ID de producto para sumar las cantidades vendidas
+        // 2. Agrupar por ID de producto
         $sqlGroupBy = ' GROUP BY a.id_product';
 
-        // Seleccionar la suma de las cantidades vendidas
+        // 3. Seleccionar la suma de las cantidades vendidas
         $sqlSelect .= ', SUM(od.product_quantity) AS total_sales';
 
-        // Agregar un filtro por ventas (ejemplo: mostrar solo productos con más de 10 ventas)
-        // if (Tools::getValue('total_sales')) {
-        //     $sqlWhere .= ' AND SUM(od.product_quantity) > '.(int)Tools::getValue('total_sales');
-        // }
+        // 4. Filtrar por ventas (usando el valor del formulario)
+        $total_sales_filter = Tools::getValue('total_sales_filter'); // Obtener valor del formulario
 
-        // Modificar la consulta (ejemplo: ordenar por ventas)
+        if (isset($total_sales_filter) && $total_sales_filter != '') {
+            $sqlWhere .= ' AND SUM(od.product_quantity) >= '.(int)$total_sales_filter;
+        }
+
+        // 5. Ordenar por ventas (opcional)
         // $sqlOrder = ' ORDER BY total_sales DESC';
 
         // Asignar las modificaciones a los parámetros
@@ -813,11 +817,11 @@ class Dbseo extends Module
         $params['sql_table'] = $sqlTable;
         $params['sql_group_by'] = $sqlGroupBy;
         // $params['sql_order'] = $sqlOrder;
-        // $params['sql_where'] = $sqlWhere;
-        var_dump($params);die;
-    }   
-    /*public function hookActionAdminProductsListingFieldsModifier($params)
-    {
+        $params['sql_where'] = $sqlWhere;
+
+        # -----------------------------------------------------------        
+        # deepseek
+        /*
         // Modificar la consulta SQL para filtrar por ventas
         $params['sql_select']['total_sales'] = array(
             'table' => 'od',
@@ -833,5 +837,6 @@ class Dbseo extends Module
 
         $params['sql_group_by'][] = 'p.id_product';
         $params['sql_order'] = 'total_sales DESC';
-    }*/
+        */
+    }
 }
