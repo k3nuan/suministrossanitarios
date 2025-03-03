@@ -787,46 +787,10 @@ class Dbseo extends Module
     public function hookActionAdminProductsListingFieldsModifier($params)
     {
         # -----------------------------------------------------------        
-        # gemini
-        // Obtener los parámetros
-        $sqlSelect = &$params['sql_select'];
-        $sqlTable = &$params['sql_table'];
-        $sqlWhere = &$params['sql_where'];
-
-        // 1. Unir la tabla order_detail
-        $sqlTable .= ' LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON a.id_product = od.id_product';
-
-        // 2. Agrupar por ID de producto
-        $sqlGroupBy = ' GROUP BY a.id_product';
-
-        // 3. Seleccionar la suma de las cantidades vendidas
-        $sqlSelect .= ', SUM(od.product_quantity) AS total_sales';
-
-        // 4. Filtrar por ventas (usando el valor del formulario)
-        $total_sales_filter = Tools::getValue('total_sales_filter'); // Obtener valor del formulario
-
-        if (isset($total_sales_filter) && $total_sales_filter != '') {
-            $sqlWhere .= ' AND SUM(od.product_quantity) >= '.(int)$total_sales_filter;
-        }
-
-        // 5. Ordenar por ventas (opcional)
-        // $sqlOrder = ' ORDER BY total_sales DESC';
-
-        // Asignar las modificaciones a los parámetros
-        $params['sql_select'] = $sqlSelect;
-        $params['sql_table'] = $sqlTable;
-        $params['sql_group_by'] = $sqlGroupBy;
-        // $params['sql_order'] = $sqlOrder;
-        $params['sql_where'] = $sqlWhere;
-
-        # -----------------------------------------------------------        
         # deepseek
-        /*
         // Modificar la consulta SQL para filtrar por ventas
-        $params['sql_select']['total_sales'] = array(
-            'table' => 'od',
-            'field' => 'SUM(od.product_quantity) AS total_sales',
-            # 'filtering' => 'SUM(od.product_quantity) > 0',
+        $params['sql_select']['sales'] = array(
+            'select' => 'SUM(od.product_quantity)'
         );
 
         $params['sql_table']['od'] = array(
@@ -836,7 +800,6 @@ class Dbseo extends Module
         );
 
         $params['sql_group_by'][] = 'p.id_product';
-        $params['sql_order'] = 'total_sales DESC';
-        */
+        $params['sql_order'][] = 'sales DESC';
     }
 }

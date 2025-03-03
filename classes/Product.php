@@ -1911,7 +1911,9 @@ class ProductCore extends ObjectModel
 
         # k3n
         Db::getInstance()->update('product_attribute_shop', array(
-                'minimal_quantity' => pSQL($minimal_quantity)
+                'minimal_quantity' => pSQL($minimal_quantity),
+                'price' => pSQL($price),
+                'wholesale_price' => pSQL($wholesale_price)
             ), 'id_product = ' . $this->id . ' AND id_product_attribute = ' . (int) $id_product_attribute);
 
         Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int) $id_product_attribute));
