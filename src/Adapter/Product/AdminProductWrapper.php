@@ -141,13 +141,10 @@ class AdminProductWrapper
         }
 
         # k3n
-        #var_dump($combinationValues);
         if (!isset($combinationValues['attribute_sell_in_multiples'])) {
-            #var_dump("false");
             $combinationValues['attribute_sell_in_multiples'] = false;
         } else {
             $combinationValues['attribute_sell_in_multiples'] = true;
-            #var_dump("true");
         }
         
         $product->updateAttribute(

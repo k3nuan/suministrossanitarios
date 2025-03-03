@@ -503,7 +503,6 @@ class ProductController extends FrameworkBundleAdminController
                 
                 # k3n
                 #var_dump("formAction :: isSubmitted");
-                #var_dump($formData['step3']['combinations']);
                 
                 if ($form->isValid()) {
                     #var_dump("isValid");
@@ -568,6 +567,7 @@ class ProductController extends FrameworkBundleAdminController
                         'product' => $product,
                         'customization_fields_ids' => $customizationFieldsIds,
                     ]);
+                    #die; # k3n
 
                     if ($request->isXmlHttpRequest()) {
                         return $response;

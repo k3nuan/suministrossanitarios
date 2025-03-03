@@ -1847,7 +1847,6 @@ class AdminProductsControllerCore extends AdminController
 
     public function processUpdate()
     {
-        #var_dump("processUpdate");
         
         $existing_product = $this->object;
 
@@ -2000,7 +1999,6 @@ class AdminProductsControllerCore extends AdminController
                 $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> (' . $this->trans('The object cannot be loaded. ', array(), 'Admin.Notifications.Error') . ')';
             }
 
-            #var_dump("object");die;
             return $object;
         }
     }
